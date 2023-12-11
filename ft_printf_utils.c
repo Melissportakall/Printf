@@ -17,54 +17,33 @@ int	ft_putchar(char c)
 	return (write(1, &c, 1));
 }
 
-int	ft_number_count(long num,int base)
-{
-	int	len;
-
-	len = 0;
-	if(num == 0)
-		return (1);
-	while(num != 0)
-	{
-		num = num / base;
-		len++;
-	}
-	return (len);
-}
-
-int ft_number_count_hex(unsigned long int number)
-{
-	int	len;
-
-	len = 0;
-	while(number != 0)
-	{
-		number = number / 16;
-		len++;
-	}
-	return(len);
-}
 int	ft_putnbr(long num)
 {
 	int		len;
+	int		ad_len;
 
 	len = 0;
-	if(num < 0)
+	if (num < 0)
 	{
-		len += ft_putchar('-');
 		num *= -1;
+		if (ft_putchar('-') == -1)
+			return (-1);
+		len++;
 	}
-	if(num == 0)
+	if (num < 10)
 	{
-		return(write(1,"0",1));
+		if (ft_putchar(num + '0') == -1)
+			return (-1);
 	}
-	if(num > 9)
+	else
 	{
-		ft_putnbr(num / 10);
+		ad_len = ft_putnbr(num / 10);
+		if (ad_len < 0)
+			return (-1);
+		len += ad_len;
+		ft_putnbr(num % 10);
 	}
-	ft_putchar(num % 10 + 48);
-	len += ft_number_count(num , 10);
-	return(len);
+	return (len + 1);
 }
 
 int	ft_string(char *str)
@@ -86,22 +65,25 @@ int	ft_string(char *str)
 	return (i);
 }
 
-int	ft_hex(unsigned long int number, char *base, int mod)
+int	ft_hex_base(unsigned long int number, char *base, int mod)
 {
 	int	len;
+	int	value;
 
 	len = 0;
 	if (mod == -1)
 	{
 		if (ft_string("0x") == -1)
 			return (-1);
-		mod += 2;
+		mod = 2;
+		len += 2;
 	}
 	if (number >= 16)
 	{
-		if (ft_hex(number / 16, base, mod) == -1)
+		value = ft_hex_base(number / 16, base, mod);
+		if (value == -1)
 			return (-1);
-		len = ft_number_count_hex(number);
+		len += value;
 	}
 	if (ft_putchar(base[number % 16]) == -1)
 		return (-1);
