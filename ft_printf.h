@@ -10,14 +10,13 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-
 #ifndef FT_PRINTF_H
 # define FT_PRINTF_H
 
 int	ft_putnbr(long num);
 int	ft_putchar(char x);
 int	ft_string(char *str);
-int	ft_hex(unsigned long int number, char *base, int mod);
+int	ft_hex_base(unsigned long int number, char *base, int mod);
 int	ft_printf(const char *str, ...);
 
 #endif
